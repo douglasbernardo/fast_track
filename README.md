@@ -1,4 +1,4 @@
-/<h1 align="left">Fast Track</h1>
+<h1 align="left">Fast Track</h1>
 
 ###
 
