@@ -16,7 +16,6 @@ v-card.pa-3(width="100%")
       required
     )
     v-btn(class="bg-orange") Cadastrar
-    div.d-inline-block
-      p.ma-2 Já é cadastrado? 
-    NuxtLink(to="/login") Login
+    p.ma-2 Já é cadastrado? Faça o 
+      NuxtLink(to="/login") Login
 </template>

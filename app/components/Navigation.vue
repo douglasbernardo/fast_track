@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     const drawer = ref(false)
-    const user = ref(false)
+    const user = ref(true)
 </script>
 <template lang="pug">
 v-card(style="z-index:1")
@@ -23,7 +23,7 @@ v-card(style="z-index:1")
     )
       v-list 
         v-list-item(title="DashBoard" prepend-icon="mdi-view-dashboard" @click="$router.push('/')")
-        v-list-item(v-show="user" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="")
+        v-list-item(v-show="user" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/codigos')")
         v-list-item(v-show="!user" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
         v-list-item(v-show="user" title="Sair" prepend-icon="mdi-logout" @click="")
 </template>
