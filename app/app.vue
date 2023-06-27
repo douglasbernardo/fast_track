@@ -1,7 +1,6 @@
-<template>
-  <div>
-    <VitePwaManifest/>
-    <NuxtLayout/>
-    <NuxtPage/>
-  </div>
+<template lang="pug">
+div
+  VitePwaManifest
+  NuxtLayout
+    NuxtPage
 </template>
