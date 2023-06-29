@@ -9,8 +9,17 @@
       return 'O codigo deve conter apenas 13 caracteres'
     }
   ])
+  const trackResult = ref()
+  const isLoading = ref(false)
+  const clicked = ref(false)
   const trackOrder = async() => {
-    await axios.post('http://localhost:3030/track').then(res=>console.log(res.data))
+    clicked.value = true
+    isLoading.value = true
+    await axios.post('http://localhost:3030/track',{orderCode: code.value})
+    .then((res) => {
+      trackResult.value = res.data
+      isLoading.value = false
+    })
   }
 </script>
 <template lang="pug">
@@ -38,6 +47,13 @@ v-container
           variant="solo"
         )
         v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
+        v-progress-circular.ma-2(
+          v-show="isLoading && clicked"
+          indeterminate
+          color="amber"
+        )
+      template(v-if="trackResult")
+        p {{ trackResult }}
 </template>
 
 <style lang="sass">
