@@ -1,11 +1,17 @@
 <script lang="ts" setup>
-  const code = ref('')
+  import axios from 'axios'
+  const code = reactive({
+    value: ''
+  })
   const codeRules = ref([
     value => {
       if(value.length <= 13) return true
       return 'O codigo deve conter apenas 13 caracteres'
     }
   ])
+  const trackOrder = async() => {
+    await axios.post('http://localhost:3030/track').then(res=>console.log(res.data))
+  }
 </script>
 <template lang="pug">
 v-container
@@ -25,13 +31,13 @@ v-container
         div(class="text-h5 mt-4 font-weight-medium mb-2") Para o rastreamento digite o codigo!
 
         v-text-field(
-          v-model="code"
+          v-model="code.value"
           label="Exemplo: AD123456789BR" 
           :counter="13"
           :rules="codeRules"
           variant="solo"
         )
-        v-btn(class="bg-orange" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
+        v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
 </template>
 
 <style lang="sass">

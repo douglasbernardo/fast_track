@@ -1,32 +1,40 @@
 <script lang="ts" setup>
+import { useDisplay } from 'vuetify/lib/framework.mjs';
+
+  const {mobile} = useDisplay()
+  console.log(mobile.value)
     const desserts= [
       {
-        name: '1',
+        id: '1',
         code: "PC123456789BR",
         description:"Esse é um produto dos correios, seria uma caixinha de som"
       },
       {
-        name: '2',
+        id: '2',
         code: "PC123456789BR",
         description:"Esse é um produto dos correios, seria uma caixinha de som"
       },
       {
-        name: '3',
+        id: '3',
         code: "PC123456789BR",
         description:"Esse é um produto dos correios, seria uma caixinha de som"
       },
       {
-        name: '4',
+        id: '4',
         code: "PC123456789BR",
         description:"Esse é um produto dos correios, seria uma caixinha de som"
       },
     ]
+    const teste = () => {
+      console.log("teste")
+    }
 </script>
 <template lang="pug">
 v-container
-  v-table(theme="dark")
+  v-table(v-if="!mobile" theme="dark")
     thead
       tr
+        th(class="text-left") Ações
         th(class="text-left") ID
         th(class="text-left") Código de rastreio
         th(class="text-left") Descrição
@@ -35,10 +43,28 @@ v-container
         v-for="item in desserts"
         :key="item.name"
       )
-        td {{ item.name }}
+        v-btn(icon="mdi-pencil" color="blue" variant="text")
+        v-btn(icon="mdi-delete" color="red" variant="text")
+        td {{ item.id }}
         td {{ item.code }}
         td {{ item.description }}
         v-btn.ma-2.pa-2(variant="outlined") Resumo
+template(v-if="mobile")
+  .cards
+    .d-flex.align-center.flex-column
+      v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="item in desserts")
+        v-card-item
+          p ID: {{ item.id }}
+          v-card-title Código: {{ item.code }}
+          v-card-subtitle {{ item.description }}
+        v-card-text
+          v-btn Resumo
+          v-menu
+            template(v-slot:activator='{ props }')
+              v-btn(v-bind='props' icon="mdi-dots-horizontal" variant="text")
+            v-list
+              v-list-item(@click="" prepend-icon="mdi-pencil") Editar
+              v-list-item(@click="" prepend-icon="mdi-delete") Excluir
 </template>
 
 <style lang="sass">
@@ -48,4 +74,8 @@ v-container
   align-items: center
   width: 100%
   height: 100vh
+.cards
+  position: relative
+  margin-top: -49rem
+  align-content: center
 </style>

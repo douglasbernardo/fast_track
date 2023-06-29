@@ -8,7 +8,6 @@ v-card(style="z-index:1")
 
     v-app-bar(
       color="warning"
-      prominent
     )
       v-app-bar-nav-icon(variant="text" @click.stop="drawer = !drawer")
 
