@@ -9,6 +9,24 @@
       return 'O codigo deve conter apenas 13 caracteres'
     }
   ])
+  const items= [
+    {
+      color: 'red-lighten-2',
+      icon: 'mdi-star',
+    },
+    {
+      color: 'purple-lighten-2',
+      icon: 'mdi-book-variant',
+    },
+    {
+      color: 'green-lighten-1',
+      icon: 'mdi-airballoon',
+    },
+    {
+      color: 'indigo-lighten-2',
+      icon: 'mdi-layers-triple',
+    },
+  ]
   const trackResult = ref()
   const isLoading = ref(false)
   const clicked = ref(false)
@@ -53,9 +71,22 @@ v-container
           color="amber"
         )
       template(v-if="trackResult")
-        p {{ trackResult }}
+        template(v-for="item in trackResult")
+          v-timeline(align="start" style="margin-top:6rem")
+            v-timeline-item(
+              v-for="track in item.eventos"
+              class="bg-green-lighten-1"
+              fill-dot
+            )
+              v-card
+                v-card-title {{ track.descricao }}
+                v-card-text(class="bg-white text--primary")
+                  p Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imp.
+                  v-btn(
+                    :color="item.color"
+                    variant="outlined"
+                  ) Button
 </template>
-
 <style lang="sass">
 .v-container
   display: flex
