@@ -9,24 +9,6 @@
       return 'O codigo deve conter apenas 13 caracteres'
     }
   ])
-  const items= [
-    {
-      color: 'red-lighten-2',
-      icon: 'mdi-star',
-    },
-    {
-      color: 'purple-lighten-2',
-      icon: 'mdi-book-variant',
-    },
-    {
-      color: 'green-lighten-1',
-      icon: 'mdi-airballoon',
-    },
-    {
-      color: 'indigo-lighten-2',
-      icon: 'mdi-layers-triple',
-    },
-  ]
   const trackResult = ref()
   const isLoading = ref(false)
   const clicked = ref(false)
@@ -75,17 +57,15 @@ v-container
           v-timeline(align="start" style="margin-top:6rem")
             v-timeline-item(
               v-for="track in item.eventos"
-              class="bg-green-lighten-1"
+              dot-color="purple"
+              icon="mdi-truck-check"
               fill-dot
+              max-width="300"
             )
               v-card
-                v-card-title {{ track.descricao }}
-                v-card-text(class="bg-white text--primary")
-                  p Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imp.
-                  v-btn(
-                    :color="item.color"
-                    variant="outlined"
-                  ) Button
+                v-card-title(class="bg-green-lighten-1" class="text-wrap") {{ track.descricao }}
+                p Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
+                p Horário: {{ track.dtHrCriado.slice(11) }}
 </template>
 <style lang="sass">
 .v-container

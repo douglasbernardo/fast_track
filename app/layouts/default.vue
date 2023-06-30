@@ -1,5 +1,7 @@
 <template lang="pug">
-v-layout 
-Navigation 
-slot
+v-layout
+  Navigation
+  v-main
+    slot
 </template>
+  
