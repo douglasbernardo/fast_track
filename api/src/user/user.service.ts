@@ -8,13 +8,16 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(@InjectModel('User') private user: Model<User>) {}
 
-  async createUser(data: any): Promise<User | undefined> {
+  async createUser(data: any): Promise<User> {
     const pswHash = await bcrypt.hash(data.password, 12);
     const user = new this.user({
       name: data.name,
       email: data.email,
       password: pswHash,
     });
+    if (!user) {
+      console.log('Hello work');
+    }
     return user.save();
   }
 }
