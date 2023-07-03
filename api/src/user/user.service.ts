@@ -19,4 +19,8 @@ export class UserService {
     }
     return user.save();
   }
+
+  async findOne(username: string) {
+    return this.user.findOne({ email: username });
+  }
 }
