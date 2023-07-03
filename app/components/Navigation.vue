@@ -31,5 +31,4 @@ v-card(style="z-index: 2")
 .v-toolbar-title
   font-family: 'Caprasimo', cursive
   font-size: 30px
-
 </style>

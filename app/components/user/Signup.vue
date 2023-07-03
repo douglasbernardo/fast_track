@@ -53,7 +53,6 @@ const signUp = async () => {
 
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
     await axios.post('http://localhost:3030/user/cadastro',objUser).then((res)=>{
-      console.log(res)
       res.status !== 201 ? snackbar.value : snackbar.value = true 
     })
   }
@@ -61,9 +60,9 @@ const signUp = async () => {
 </script>
 <template lang="pug">
 v-container
-  v-card.pa-3(:width="mobile ? '100%' : '50%'")
+  v-card.pa-2(:width="mobile ? '100%' : '50%'")
     h1.text-center Cadastro
-    v-form.mt-2(validate-on="submit lazy")
+    v-form.mt-2
       v-alert.mb-2(
         variant="outlined"
         text="Preencha os dados corretamente" 
@@ -114,3 +113,11 @@ v-container
         p.ma-2 Clique aqui para ser redirecionado(a) para a página de login
           v-btn.ma-2.pa-2(to="/login" variant="outlined") Login
 </template>
+<style lang="sass" scoped>
+.v-container
+  display: flex
+  justify-content: center
+  align-items: center
+  height: 100%
+  width: 100%
+</style>
