@@ -1,5 +1,4 @@
-<template>
-    <div>
-        <Teste/>
-    </div>
+<template lang="pug">
+v-container 
+  Track
 </template>
