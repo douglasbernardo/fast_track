@@ -11,9 +11,7 @@
   ])
   const trackResult = ref()
   const isLoading = ref(false)
-  const clicked = ref(false)
   const trackOrder = async() => {
-    clicked.value = true
     isLoading.value = true
     await axios.post('http://localhost:3030/track',{orderCode: code.value})
     .then((res) => {
@@ -48,7 +46,7 @@ v-container
         )
         v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
         v-progress-circular.ma-2(
-          v-show="isLoading && clicked"
+          v-show="isLoading"
           indeterminate
           color="amber"
         )
@@ -57,7 +55,7 @@ v-container
           v-timeline(align="start" style="margin-top:6rem")
             v-timeline-item(
               v-for="track in item.eventos"
-              dot-color="purple"
+              dot-color="purple-lighten-3"
               icon="mdi-truck-check"
               fill-dot
               max-width="300"
