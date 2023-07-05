@@ -1,4 +1,3 @@
 <template lang="pug">
-v-container 
-  Track
+Track
 </template>
