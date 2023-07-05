@@ -9,8 +9,8 @@ const user = reactive({
   email: '',
   password: ''
 })
-const errors = ref([])
-const passedWithNoErrors = ref([])
+const errors = ref<Array<string>>([])
+const passedWithNoErrors = ref<Array<boolean>>([])
 const nameRules = [
   value => {
     if(value) return true
