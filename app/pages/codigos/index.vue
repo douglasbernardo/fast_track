@@ -1,37 +1,35 @@
 <script lang="ts" setup>
-import { useDisplay } from 'vuetify/lib/framework.mjs';
-
+  import { useDisplay } from 'vuetify/lib/framework.mjs';
   const {mobile} = useDisplay()
-  console.log(mobile.value)
-    const desserts= [
-      {
-        id: '1',
-        code: "PC123456789BR",
-        description:"Esse é um produto dos correios, seria uma caixinha de som"
-      },
-      {
-        id: '2',
-        code: "PC123456789BR",
-        description:"Esse é um produto dos correios, seria uma caixinha de som"
-      },
-      {
-        id: '3',
-        code: "PC123456789BR",
-        description:"Esse é um produto dos correios, seria uma caixinha de som"
-      },
-      {
-        id: '4',
-        code: "PC123456789BR",
-        description:"Esse é um produto dos correios, seria uma caixinha de som"
-      },
-    ]
-    const teste = () => {
-      console.log("teste")
-    }
+  const desserts= [
+    {
+      id: '1',
+      code: "PC123456789BR",
+      description:"Esse é um produto dos correios, seria uma caixinha de som"
+    },
+    {
+      id: '2',
+      code: "PC123456789BR",
+      description:"Esse é um produto dos correios, seria uma caixinha de som"
+    },
+    {
+      id: '3',
+      code: "PC123456789BR",
+      description:"Esse é um produto dos correios, seria uma caixinha de som"
+    },
+    {
+      id: '4',
+      code: "PC123456789BR",
+      description:"Esse é um produto dos correios, seria uma caixinha de som"
+    },
+  ]
+  const teste = () => {
+    console.log("teste")
+  }
 </script>
 <template lang="pug">
-v-container
-  v-table(v-if="!mobile" theme="dark")
+v-container.notMobile(v-if="!mobile")
+  v-table(theme="dark")
     thead
       tr
         th(class="text-left") Ações
@@ -49,7 +47,7 @@ v-container
         td {{ item.code }}
         td {{ item.description }}
         v-btn.ma-2.pa-2(variant="outlined") Resumo
-template(v-if="mobile")
+v-container.mobile(v-if="mobile")
   .cards
     .d-flex.align-center.flex-column
       v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="item in desserts")
@@ -68,14 +66,18 @@ template(v-if="mobile")
 </template>
 
 <style lang="sass">
-.v-container
+.notMobile
   display: flex
   justify-content: center
   align-items: center
   width: 100%
-  height: 100vh
+  height: 70vh
+.mobile
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
 .cards
   position: relative
-  margin-top: -49rem
   align-content: center
 </style>

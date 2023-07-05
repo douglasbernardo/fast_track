@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-    const drawer = ref(false)
-    const user = ref(false)
+  const drawer = ref(false)
+  const user = ref(false)
 </script>
 <template lang="pug">
 v-card(style="z-index: 2")
