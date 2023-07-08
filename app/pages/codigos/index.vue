@@ -29,6 +29,9 @@
 </script>
 <template lang="pug">
 v-container.notMobile(v-if="!mobile")
+  v-tooltip(text="Adicionar um novo código")
+    template(v-slot:activator="{ props }")
+      v-btn(v-bind="props" icon="mdi-plus-thick")
   v-table(theme="dark")
     thead
       tr
@@ -50,6 +53,9 @@ v-container.notMobile(v-if="!mobile")
 v-container.mobile(v-if="mobile")
   .cards
     .d-flex.align-center.flex-column
+      v-tooltip(text="Adicionar um novo código")
+        template(v-slot:activator="{ props }")
+          v-btn(v-bind="props" icon="mdi-plus-thick")
       v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="item in desserts")
         v-card-item
           p ID: {{ item.id }}

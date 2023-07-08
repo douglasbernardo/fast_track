@@ -1,4 +1,4 @@
-import { Request, Controller, Get, Post, Res } from '@nestjs/common';
+import { Request, Controller, Get, Post, Res, Req } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { FastifyReply } from 'fastify';
 
@@ -9,6 +9,12 @@ export class TrackController {
   @Post()
   async track(@Request() req, @Res() res: FastifyReply) {
     const result = await this.trackService.tracking(req);
+    return res.send(result);
+  }
+
+  @Get('/save')
+  async saveCode(@Req){
+    const result  = await this.trackService.saveTrack();
     return res.send(result);
   }
 }

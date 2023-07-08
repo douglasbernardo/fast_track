@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import axios from 'axios';
+import { useStorage } from '@vueuse/core'
 const show1 = ref(false)
 const user = reactive({
   email: '',
@@ -20,7 +21,7 @@ const login = async () => {
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
     await axios.post('http://localhost:3030/auth/login',userLogin).then((response)=>{
       if(response.data){
-        localStorage.setItem('token',response.data.access_token)
+        useStorage('token', JSON.stringify(response.data.access_token))
         navigateTo('/')
       }
     })
