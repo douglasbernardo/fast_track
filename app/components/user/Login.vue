@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import axios from 'axios';
-
+import { useStorage } from '@vueuse/core'
 const show1 = ref(false)
 const user = reactive({
   email: '',
@@ -19,8 +19,11 @@ const login = async () => {
   user.password ? passedWithNoErrors.value.push(true) : errors.value.push("Senha está vazio")
   regex.test(user.email) ? passedWithNoErrors.value.push(true) : errors.value.push('E-mail é inválido') 
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
-    await axios.post('http://localhost:3030/user/login',userLogin).then((res)=>{
-      console.log(res.data)
+    await axios.post('http://localhost:3030/auth/login',userLogin).then((response)=>{
+      if(response.data){
+        useStorage('token', JSON.stringify(response.data.access_token))
+        navigateTo('/')
+      }
     })
   }
 }
@@ -53,7 +56,7 @@ v-container
         @click:append-inner="show1 = !show1"
         :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
       )
-      v-btn(class="bg-orange" @click="login()") Logar
+      v-btn(class="bg-orange" @click="login") Logar
       p.ma-2 Não é cadastrado? 
         NuxtLink(to="/cadastro") Cadastre-se
 </template>

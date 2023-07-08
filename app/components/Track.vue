@@ -3,18 +3,20 @@
   const code = reactive({
     value: ''
   })
-  const codeRules = ref([
+  const user = ref(false)
+  const codeRules = [
     value => {
       if(value.length <= 13) return true
       return 'O codigo deve conter apenas 13 caracteres'
     }
-  ])
+  ]
   const trackResult = ref()
   const isLoading = ref(false)
   const trackOrder = async() => {
     isLoading.value = true
     await axios.post('http://localhost:3030/track',{orderCode: code.value})
     .then((res) => {
+      console.log("teste aqi:",res.config)
       trackResult.value = res.data
       isLoading.value = false
     })
@@ -45,6 +47,13 @@ v-container
         variant="solo"
       )
       v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
+      v-btn.ma-2(
+        v-if="user && !isLoading"
+        class="bg-orange" 
+        @click="saveCodeTracking" 
+        append-icon="mdi-content-save-move" 
+        color="orange"
+      ) Salvar Código
       v-progress-circular.ma-2(
         v-show="isLoading"
         indeterminate

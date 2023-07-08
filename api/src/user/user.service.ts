@@ -6,7 +6,10 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private user: Model<User>) {}
+  constructor(
+    @InjectModel('User')
+    private readonly user: Model<User>,
+  ) {}
 
   async createUser(data: any): Promise<User> {
     const user = new this.user({
@@ -20,7 +23,7 @@ export class UserService {
     return user.save();
   }
 
-  async findOne(username: string) {
-    return this.user.findOne({ email: username });
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.user.findOne({ email: email });
   }
 }

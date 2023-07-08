@@ -1,6 +1,19 @@
 <script lang="ts" setup>
   const drawer = ref(false)
-  const user = ref(false)
+  const isLoggedIn = ref(false)
+  if(localStorage.getItem("token")){
+    isLoggedIn.value = true
+  }
+  watch(isLoggedIn,(new_v)=>{
+    if(localStorage.getItem("token")){
+      isLoggedIn.value = new_v 
+    }
+  })
+  const logout = () => {
+    isLoggedIn.value = false
+    window.localStorage.clear()
+    navigateTo('/')
+  }
 </script>
 <template lang="pug">
 v-card(style="z-index: 2")
@@ -10,6 +23,7 @@ v-card(style="z-index: 2")
     v-app-bar-nav-icon(variant="text" @click.stop="drawer = !drawer")
 
     v-toolbar-title Fast Track
+    p {{isLoggedIn}}
 
     v-spacer
 
@@ -20,9 +34,9 @@ v-card(style="z-index: 2")
   )
     v-list 
       v-list-item(title="DashBoard" prepend-icon="mdi-view-dashboard" @click="$router.push('/')")
-      v-list-item(v-show="user" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/codigos')")
-      v-list-item(v-show="!user" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
-      v-list-item(v-show="user" title="Sair" prepend-icon="mdi-logout" @click="")
+      v-list-item(v-show="isLoggedIn" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/codigos')")
+      v-list-item(v-show="!isLoggedIn" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
+      v-list-item(v-show="isLoggedIn" title="Sair" prepend-icon="mdi-logout" @click="logout()")
 </template>
 
 <style lang="sass">
