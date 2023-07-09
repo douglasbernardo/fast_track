@@ -12,9 +12,9 @@ export class TrackController {
     return res.send(result);
   }
 
-  @Get('/save')
-  async saveCode(@Req){
-    const result  = await this.trackService.saveTrack();
-    return res.send(result);
+  @Post('/save')
+  async saveCode(@Request() req) {
+    const result = await this.trackService.saveTrack(req.body);
+    return result;
   }
 }

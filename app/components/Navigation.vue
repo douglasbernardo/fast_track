@@ -34,7 +34,7 @@ v-card(style="z-index: 2")
   )
     v-list 
       v-list-item(title="DashBoard" prepend-icon="mdi-view-dashboard" @click="$router.push('/')")
-      v-list-item(v-show="isLoggedIn" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/codigos')")
+      v-list-item(v-show="isLoggedIn" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/rastreio')")
       v-list-item(v-show="!isLoggedIn" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
       v-list-item(v-show="isLoggedIn" title="Sair" prepend-icon="mdi-logout" @click="logout()")
 </template>
