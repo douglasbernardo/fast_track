@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-  import axios from 'axios'
+  import { useStorage } from '@vueuse/core';
+import axios from 'axios'
   const code = reactive({
     value: ''
   })
-  const user = ref(false)
+  const user = localStorage.getItem('token')
   const codeRules = [
     value => {
       if(value.length <= 13) return true
@@ -13,12 +14,26 @@
   const trackResult = ref()
   const isLoading = ref(false)
   const trackOrder = async() => {
+    useStorage('codeTrack',code.value)
+    setTimeout(()=>{
+      localStorage.removeItem('codeTrack')
+    },4000)
     isLoading.value = true
     await axios.post('http://localhost:3030/track',{orderCode: code.value})
     .then((res) => {
-      console.log("teste aqi:",res.config)
       trackResult.value = res.data
       isLoading.value = false
+    })
+  }
+
+  const saveCodeTracking = async () => {
+    await axios.post('http://localhost:3030/track/save',
+    {
+      trackCode: localStorage.getItem('codeTrack'),
+      user: localStorage.getItem('user')
+    })
+    .then((res) => {
+      console.log(res.data)
     })
   }
 </script>
@@ -48,7 +63,7 @@ v-container
       )
       v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
       v-btn.ma-2(
-        v-if="user && !isLoading"
+        v-if="user"
         class="bg-orange" 
         @click="saveCodeTracking" 
         append-icon="mdi-content-save-move" 
