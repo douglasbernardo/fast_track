@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -18,7 +18,7 @@ export class UserService {
       password: await bcrypt.hash(data.password, 12),
     });
     if (!user) {
-      console.log('Hello work');
+      throw new UnauthorizedException();
     }
     return user.save();
   }

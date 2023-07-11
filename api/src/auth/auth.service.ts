@@ -12,6 +12,12 @@ export class AuthService {
 
   async signIn(req) {
     const user = await this.userService.findByEmail(req.email);
+    if (!user) {
+      throw new UnauthorizedException('E-mail não existe');
+    }
+    if (!bcrypt.compareSync(req.password, user.password)) {
+      throw new UnauthorizedException('Senha inválida');
+    }
     if (user && bcrypt.compareSync(req.password, user.password)) {
       const payload = { sub: user._id, username: user.email, name: user.name };
       return {
@@ -19,7 +25,7 @@ export class AuthService {
         payload,
       };
     } else {
-      throw new UnauthorizedException('Senha não é a mesma da cadastrada');
+      throw new UnauthorizedException('Algum erro aconteceu');
     }
   }
 }

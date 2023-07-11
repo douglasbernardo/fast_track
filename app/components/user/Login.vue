@@ -22,6 +22,7 @@ const login = async () => {
     await axios.post('http://localhost:3030/auth/login',userLogin).then((response)=>{
       if(response.data){
         useStorage('token', JSON.stringify(response.data.access_token))
+        useStorage('user',response.data.payload.username)
         navigateTo('/')
       }
     })
