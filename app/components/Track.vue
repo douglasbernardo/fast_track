@@ -26,6 +26,7 @@ import axios from 'axios'
     })
   }
 
+  const codeSavedSnackBar = ref(false)
   const saveCodeTracking = async () => {
     await axios.post('http://localhost:3030/track/save',
     {
@@ -33,6 +34,8 @@ import axios from 'axios'
       user: localStorage.getItem('user')
     })
     .then((res) => {
+      if(!res) return
+      codeSavedSnackBar.value = true
       console.log(res.data)
     })
   }
@@ -63,12 +66,21 @@ v-container
       )
       v-btn(class="bg-orange" @click="trackOrder" append-icon="mdi-magnify" color="orange") Fazer o Rastreamento
       v-btn.ma-2(
-        v-if="user"
+        v-if="user && trackResult"
         class="bg-orange" 
         @click="saveCodeTracking" 
         append-icon="mdi-content-save-move" 
         color="orange"
       ) Salvar Código
+      div(class="text-center ma-2")
+        v-snackbar(
+          location="end"
+          color="success"
+          position="absolute"
+          variant="tonal"
+          timeout="5000"
+          v-model="codeSavedSnackBar"
+        ) Código de rastreio foi salvo com sucesso
       v-progress-circular.ma-2(
         v-show="isLoading"
         indeterminate

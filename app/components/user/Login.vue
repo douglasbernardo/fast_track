@@ -18,12 +18,17 @@ const login = async () => {
   user.email ? passedWithNoErrors.value.push(true) : errors.value.push("E-mail está vazio")
   user.password ? passedWithNoErrors.value.push(true) : errors.value.push("Senha está vazio")
   regex.test(user.email) ? passedWithNoErrors.value.push(true) : errors.value.push('E-mail é inválido') 
+  errors.value = []
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
     await axios.post('http://localhost:3030/auth/login',userLogin).then((response)=>{
       if(response.data){
         useStorage('token', JSON.stringify(response.data.access_token))
         useStorage('user',response.data.payload.username)
         navigateTo('/')
+      }
+    }).catch((error)=>{
+      if(error){
+        errors.value.push(error.response.data.message)
       }
     })
   }
@@ -34,6 +39,7 @@ v-container
   v-card.pa-3(:width="inject('isMobile') ? '100%' : '50%'")
     h1.text-center Login
     v-alert.mb-2(
+      v-if="errors"
       v-for="error in errors"
       variant="outlined"
       :text="error" 
