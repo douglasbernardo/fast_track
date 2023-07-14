@@ -17,4 +17,10 @@ export class TrackController {
     const result = await this.trackService.saveTrack(req.body);
     return result;
   }
+
+  @Post('/meus-codigos')
+  async getCodes(@Request() req) {
+    const result = await this.trackService.getTrackCode(req.body);
+    return result;
+  }
 }

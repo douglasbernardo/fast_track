@@ -8,12 +8,7 @@ const errors = ref<Array<string>>([])
 const passedConditional = ref<Array<boolean>>([])
 
 const saveCode = async () => {
-  //melhorar validação para o input do código de rastreio
-  if(track.code.length > 13){
-    errors.value.push('Código não pode ter mais de 13 caracteres');
-  }else{
-    passedConditional.value.push(true)
-  }
+  errors.value = []
   if(passedConditional.value.every((item)=>item===true) && !errors.value.length){
     await axios.post('http://localhost:3030/track/save',{
       trackCode: track.code,
@@ -21,10 +16,11 @@ const saveCode = async () => {
       user: localStorage.getItem('user')
     })
     .then((res) => {
-      console.log(res);
       if(res.data){
         navigateTo('/rastreio')
       }
+    }).catch((error)=>{
+      errors.value.push(error.response.data.message)
     })
   }
 }
