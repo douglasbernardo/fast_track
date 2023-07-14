@@ -1,18 +1,22 @@
 <script lang="ts" setup>
   const drawer = ref(false)
   const isLoggedIn = ref(false)
-  if(localStorage.getItem("token")){
-    isLoggedIn.value = true
-  }
-  watch(isLoggedIn,(new_v)=>{
-    if(localStorage.getItem("token")){
-      isLoggedIn.value = new_v 
+  const token = localStorage.getItem('token')
+  onMounted(()=>{
+    if(token){
+      isLoggedIn.value = true
     }
   })
+  watch(
+    () => isLoggedIn.value,
+    (newValue) => {
+      isLoggedIn.value = newValue
+    }
+  )
   const logout = () => {
     isLoggedIn.value = false
     window.localStorage.clear()
-    navigateTo('/')
+    navigateTo('/')  
   }
 </script>
 <template lang="pug">
