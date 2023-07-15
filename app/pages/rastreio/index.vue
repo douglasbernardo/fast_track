@@ -1,28 +1,19 @@
 <script lang="ts" setup>
-  import { useDisplay } from 'vuetify/lib/framework.mjs';
+  import axios from 'axios';
+import { useDisplay } from 'vuetify/lib/framework.mjs';
   const {mobile} = useDisplay()
-  const desserts= [
-    {
-      id: '1',
-      code: "PC123456789BR",
-      description:"Esse é um produto dos correios, seria uma caixinha de som"
-    },
-    {
-      id: '2',
-      code: "PC123456789BR",
-      description:"Esse é um produto dos correios, seria uma caixinha de som"
-    },
-    {
-      id: '3',
-      code: "PC123456789BR",
-      description:"Esse é um produto dos correios, seria uma caixinha de som"
-    },
-    {
-      id: '4',
-      code: "PC123456789BR",
-      description:"Esse é um produto dos correios, seria uma caixinha de som"
-    },
-  ]
+  const trackCodes = ref()
+  await axios.post('http://localhost:3030/track/meus-codigos',{
+    user: localStorage.getItem('user')
+  }).then((res)=>{
+    console.log(res.data)
+    trackCodes.value = res.data
+  })
+
+  const show = ref(false)
+  const showId = () => {
+    show.value = !show.value
+  }
   const teste = () => {
     console.log("teste")
   }
@@ -41,14 +32,14 @@ v-container.notMobile(v-if="!mobile")
         th(class="text-left") Descrição
     tbody
       tr(
-        v-for="item in desserts"
-        :key="item.name"
+        v-for="code in trackCodes"
+        :key="code.id"
       )
         v-btn(icon="mdi-pencil" color="blue" variant="text")
         v-btn(icon="mdi-delete" color="red" variant="text")
-        td {{ item.id }}
-        td {{ item.code }}
-        td {{ item.description }}
+        td {{ code._id }}
+        td {{ code.code }}
+        td {{ code.description }}
         v-btn.ma-2.pa-2(variant="outlined") Resumo
 v-container.mobile(v-if="mobile")
   .cards
@@ -56,11 +47,11 @@ v-container.mobile(v-if="mobile")
       v-tooltip(text="Adicionar um novo código")
         template(v-slot:activator="{ props }")
           v-btn(v-bind="props" icon="mdi-plus-thick" @click="$router.push('/rastreio/adicionar-codigo')")
-      v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="item in desserts")
+      v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="code in trackCodes")
         v-card-item
-          p ID: {{ item.id }}
-          v-card-title Código: {{ item.code }}
-          v-card-subtitle {{ item.description }}
+          p ID: {{ code.id }}
+          v-card-title Código: {{ code.code }}
+          v-card-subtitle {{ code.description }}
         v-card-text
           v-btn Resumo
           v-menu
