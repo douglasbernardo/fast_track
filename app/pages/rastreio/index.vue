@@ -27,7 +27,6 @@ v-container.notMobile(v-if="!mobile")
     thead
       tr
         th(class="text-left") Ações
-        th(class="text-left") ID
         th(class="text-left") Código de rastreio
         th(class="text-left") Descrição
     tbody
@@ -37,10 +36,9 @@ v-container.notMobile(v-if="!mobile")
       )
         v-btn(icon="mdi-pencil" color="blue" variant="text")
         v-btn(icon="mdi-delete" color="red" variant="text")
-        td {{ code._id }}
+        v-btn(icon="mdi-information" color="orange" variant="text")
         td {{ code.code }}
         td {{ code.description }}
-        v-btn.ma-2.pa-2(variant="outlined") Resumo
 v-container.mobile(v-if="mobile")
   .cards
     .d-flex.align-center.flex-column
@@ -49,7 +47,6 @@ v-container.mobile(v-if="mobile")
           v-btn(v-bind="props" icon="mdi-plus-thick" @click="$router.push('/rastreio/adicionar-codigo')")
       v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="code in trackCodes")
         v-card-item
-          p ID: {{ code.id }}
           v-card-title Código: {{ code.code }}
           v-card-subtitle {{ code.description }}
         v-card-text
