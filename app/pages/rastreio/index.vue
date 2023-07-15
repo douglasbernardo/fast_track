@@ -1,21 +1,22 @@
 <script lang="ts" setup>
   import axios from 'axios';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
+  import { useDisplay } from 'vuetify/lib/framework.mjs';
   const {mobile} = useDisplay()
   const trackCodes = ref()
   await axios.post('http://localhost:3030/track/meus-codigos',{
     user: localStorage.getItem('user')
   }).then((res)=>{
-    console.log(res.data)
     trackCodes.value = res.data
   })
 
-  const show = ref(false)
-  const showId = () => {
-    show.value = !show.value
-  }
-  const teste = () => {
-    console.log("teste")
+  const dialog = ref(false)
+  const deleteCode = async (id: string) => {
+    await axios.post('http://localhost:3030/track/delete', {
+      idCode: id,
+      user: localStorage.getItem('user')
+    }).then((res)=>{
+      if(res) window.location.reload()
+    })
   }
 </script>
 <template lang="pug">
@@ -35,8 +36,20 @@ v-container.notMobile(v-if="!mobile")
         :key="code.id"
       )
         v-btn(icon="mdi-pencil" color="blue" variant="text")
-        v-btn(icon="mdi-delete" color="red" variant="text")
-        v-btn(icon="mdi-information" color="orange" variant="text")
+        v-btn(icon="mdi-delete" @click="dialog=true" color="red" variant="text")
+        v-dialog(
+          v-model="dialog"
+          width="400"
+        )
+          v-card
+            v-card-text.bg-blue-grey-lighten-1 Deseja excluir esse código de rastreio?
+            span.text-center.ma-2.text-warning Se excluido, o código não poderá ser recuperado!
+            v-card-actions
+              v-btn(color="primary" @click="dialog = false") Cancelar
+              v-btn(color="primary" @click="deleteCode(code._id)") Excluir
+        v-tooltip(text="Resultado do rastreio desse código")
+          template(v-slot:activator="{ props }")
+            v-btn(v-bind="props" color="orange" variant="text" icon="mdi-eye-settings")
         td {{ code.code }}
         td {{ code.description }}
 v-container.mobile(v-if="mobile")

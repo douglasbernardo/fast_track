@@ -45,4 +45,10 @@ export class TrackService {
     const user = await this.userService.findByEmail(data.user);
     return this.trackSchema.find({ createdBy: user._id }).exec();
   }
+
+  async deleteCode(data) {
+    const user = await this.userService.findByEmail(data.user);
+    if (!user) throw new UnauthorizedException('Você não pode excluir');
+    return await this.trackSchema.findByIdAndDelete(data.idCode);
+  }
 }
