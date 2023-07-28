@@ -18,6 +18,17 @@
       if(res) window.location.reload()
     })
   }
+
+  const isEditing = ref(false)
+  const editCode = async (id: string) => {
+    isEditing.value = true
+    trackCodes.value = trackCodes.value.find((code: any) => code._id === id);
+  }
+
+  console.log(trackCodes.value)
+  const saveEditedCode = async () => {
+
+  }
 </script>
 <template lang="pug">
 v-container.notMobile(v-if="!mobile")
@@ -30,12 +41,14 @@ v-container.notMobile(v-if="!mobile")
         th(class="text-left") Ações
         th(class="text-left") Código de rastreio
         th(class="text-left") Descrição
-    tbody
+    tbody(v-if="trackCodes")
       tr(
-        v-for="code in trackCodes"
-        :key="code.id"
+        v-for="(code, index) in trackCodes"
+        :key="index"
       )
-        v-btn(icon="mdi-pencil" color="blue" variant="text")
+        v-tooltip(:text="code._id")
+          template(v-slot:activator="{ props }")
+            v-btn(v-bind="props" icon="mdi-pencil" @click="editCode(code._id)" color="blue" variant="text")
         v-btn(icon="mdi-delete" @click="dialog=true" color="red" variant="text")
         v-dialog(
           v-model="dialog"
@@ -50,8 +63,18 @@ v-container.notMobile(v-if="!mobile")
         v-tooltip(text="Resultado do rastreio desse código")
           template(v-slot:activator="{ props }")
             v-btn(v-bind="props" color="orange" variant="text" icon="mdi-eye-settings")
-        td {{ code.code }}
-        td {{ code.description }}
+        template(v-if="!isEditing")
+          td {{ code.code }}
+          td 
+            p {{ code.description ? code.description : '.....' }}
+        template(v-if="isEditing")
+          td
+            v-text-field(v-model="edit.code")
+          td 
+            v-textarea(v-model="edit.description" rows="1")
+          td 
+            v-btn(class="bg-orange" @click="saveEditedCode(edit._id)" variant="outlined") Editar
+    p.text-center(v-else) Não Há códigos cadastrados no momento
 v-container.mobile(v-if="mobile")
   .cards
     .d-flex.align-center.flex-column
