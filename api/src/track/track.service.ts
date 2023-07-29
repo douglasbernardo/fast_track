@@ -1,3 +1,4 @@
+import { userSchema } from './../user/schemas/user.schema';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { rastrearEncomendas } from 'correios-brasil/dist';
@@ -50,5 +51,23 @@ export class TrackService {
     const user = await this.userService.findByEmail(data.user);
     if (!user) throw new UnauthorizedException('Você não pode excluir');
     return await this.trackSchema.findByIdAndDelete(data.idCode);
+  }
+
+  async editTrackCode(data) {
+    if (!this.verifyNumbers(data.values.code)) {
+      throw new UnauthorizedException('Código de rastreio inválido');
+    }
+    if (data.values.code.length < 13) {
+      throw new UnauthorizedException(
+        'Código de rastreio deve conter 13 caracteres',
+      );
+    }
+    const user = await this.userService.findByEmail(data.user);
+    if (!user) throw new UnauthorizedException('Você não pode editar');
+    const findTrack = await this.trackSchema.find({ createdBy: user._id });
+    if (!findTrack) return;
+    return await this.trackSchema.findByIdAndUpdate(data.idCode, {
+      $set: { code: data.values.code, description: data.values.description },
+    });
   }
 }

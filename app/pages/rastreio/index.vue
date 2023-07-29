@@ -19,15 +19,24 @@
     })
   }
 
-  const isEditing = ref(false)
-  const editCode = async (id: string) => {
-    isEditing.value = true
-    trackCodes.value = trackCodes.value.find((code: any) => code._id === id);
+  const editingRowIndex = ref(-1)
+  const editCode = async (index: number) => {
+    editingRowIndex.value = index
   }
 
-  console.log(trackCodes.value)
-  const saveEditedCode = async () => {
-
+  const errorsEditing = ref([])
+  const saveEditedCode = async (id: string, value: object) => {
+    await axios.patch('http://localhost:3030/track/editar-codigo', {
+      idCode: id,
+      user: localStorage.getItem('user'),
+      values: value,
+    }).then((res)=>{
+      if(res) window.location.reload()
+    })
+    .catch((e) => {
+      if(!e) return 
+      errorsEditing.value.push(e.response.data.message)
+    })
   }
 </script>
 <template lang="pug">
@@ -35,7 +44,14 @@ v-container.notMobile(v-if="!mobile")
   v-tooltip(text="Adicionar um novo código")
     template(v-slot:activator="{ props }")
       v-btn(v-bind="props" icon="mdi-plus-thick" @click="$router.push('/rastreio/adicionar-codigo')")
-  v-table(theme="dark")
+  v-alert(
+    v-for="error in errorsEditing"
+    closable
+    title="Falha ao Editar"
+    :text="error"
+    type="error"
+  )
+  v-table.ma-2(theme="dark")
     thead
       tr
         th(class="text-left") Ações
@@ -46,9 +62,7 @@ v-container.notMobile(v-if="!mobile")
         v-for="(code, index) in trackCodes"
         :key="index"
       )
-        v-tooltip(:text="code._id")
-          template(v-slot:activator="{ props }")
-            v-btn(v-bind="props" icon="mdi-pencil" @click="editCode(code._id)" color="blue" variant="text")
+        v-btn(v-if="editingRowIndex !== index" icon="mdi-pencil" @click="editCode(index)" color="blue" variant="text")
         v-btn(icon="mdi-delete" @click="dialog=true" color="red" variant="text")
         v-dialog(
           v-model="dialog"
@@ -63,17 +77,15 @@ v-container.notMobile(v-if="!mobile")
         v-tooltip(text="Resultado do rastreio desse código")
           template(v-slot:activator="{ props }")
             v-btn(v-bind="props" color="orange" variant="text" icon="mdi-eye-settings")
-        template(v-if="!isEditing")
-          td {{ code.code }}
-          td 
-            p {{ code.description ? code.description : '.....' }}
-        template(v-if="isEditing")
-          td
-            v-text-field(v-model="edit.code")
-          td 
-            v-textarea(v-model="edit.description" rows="1")
-          td 
-            v-btn(class="bg-orange" @click="saveEditedCode(edit._id)" variant="outlined") Editar
+        td
+          v-chip(v-if="editingRowIndex !== index") {{ code.code }}
+          v-text-field.ma-2(v-else style="width: 10rem" v-model="code.code")
+        td 
+          span(v-if="editingRowIndex !== index") {{ code.description ? code.description : '.........' }}
+          v-textarea.ma-2(v-else v-model="code.description" rows="1")
+        td 
+          v-btn.ma-2(v-if="editingRowIndex == index" color="warning" icon="mdi-check-bold" size="small" @click="saveEditedCode(code._id,{ code: code.code, description:code.description})")
+          v-btn.ma-2(v-if="editingRowIndex == index" icon="mdi-close" color="red" size="small" @click="editCode(-1)")
     p.text-center(v-else) Não Há códigos cadastrados no momento
 v-container.mobile(v-if="mobile")
   .cards
