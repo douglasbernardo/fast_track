@@ -3,11 +3,15 @@
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const {mobile} = useDisplay()
   const trackCodes = ref()
-  await axios.post('http://localhost:3030/track/meus-codigos',{
-    user: localStorage.getItem('user')
-  }).then((res)=>{
-    trackCodes.value = res.data
-  })
+  const fetchData = async () => {
+    await axios.post('http://localhost:3030/track/meus-codigos',{
+      user: localStorage.getItem('user')
+    }).then((res)=>{
+      trackCodes.value = res.data
+    })
+  }
+
+  onMounted(() => fetchData())
 
   const dialog = ref(false)
   const deleteCode = async (id: string) => {
@@ -15,7 +19,7 @@
       idCode: id,
       user: localStorage.getItem('user')
     }).then((res)=>{
-      if(res) window.location.reload()
+      if(res) fetchData()
     })
   }
 
@@ -31,7 +35,7 @@
       user: localStorage.getItem('user'),
       values: value,
     }).then((res)=>{
-      if(res) window.location.reload()
+      if(!res) fetchData()
     })
     .catch((e) => {
       if(!e) return 
