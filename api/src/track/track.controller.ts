@@ -1,4 +1,4 @@
-import { Request, Controller, Get, Post, Res, Req } from '@nestjs/common';
+import { Request, Controller, Post, Res, Patch } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { FastifyReply } from 'fastify';
 
@@ -14,13 +14,21 @@ export class TrackController {
 
   @Post('/save')
   async saveCode(@Request() req) {
-    const result = await this.trackService.saveTrack(req.body);
-    return result;
+    return await this.trackService.saveTrack(req.body);
   }
 
   @Post('/meus-codigos')
   async getCodes(@Request() req) {
-    const result = await this.trackService.getTrackCode(req.body);
-    return result;
+    return await this.trackService.getTrackCode(req.body);
+  }
+
+  @Post('/delete')
+  async deleteTrackCode(@Request() req) {
+    return this.trackService.deleteCode(req.body);
+  }
+
+  @Patch('/editar-codigo')
+  async editTrackCode(@Request() req) {
+    return this.trackService.editTrackCode(req.body);
   }
 }

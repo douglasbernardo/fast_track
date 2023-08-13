@@ -98,8 +98,8 @@ v-container
           )
             v-card
               v-card-title(class="bg-green-lighten-1" class="text-wrap") {{ track.descricao }}
-              p Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
-              p Horário: {{ track.dtHrCriado.slice(11) }}
+              v-chip.ma-1(variant="outlined") Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
+              v-chip.ma-1(variant="outlined") Horário: {{ track.dtHrCriado.slice(11) }}
 </template>
 <style lang="sass" scoped>
 .v-container
