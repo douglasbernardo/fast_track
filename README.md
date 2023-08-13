@@ -38,4 +38,4 @@
 
 ###
 
-<p>Modulo responsavel por fazer o rastreio: <a href="https://github.com/FinotiLucas/Correios-Brasil">Correios Brasil</a></p>
+<p>Biblioteca responsavel por fazer o rastreio: <a href="https://github.com/FinotiLucas/Correios-Brasil">Correios Brasil</a></p>
