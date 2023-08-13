@@ -2,25 +2,16 @@
   import axios from 'axios';
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const {mobile} = useDisplay()
-  const trackCodes = ref()
+  const trackCodes = ref([])
   const fetchData = async () => {
-    await axios.post('http://localhost:3030/track/meus-codigos',{
-      user: localStorage.getItem('user')
-    }).then((res)=>{
-      trackCodes.value = res.data
-    })
+    trackCodes.value = (await axios.post('http://localhost:3030/track/meus-codigos',{user: localStorage.getItem('user')})).data
   }
 
   onMounted(() => fetchData())
 
-  const dialog = ref(false)
   const deleteCode = async (id: string) => {
-    await axios.post('http://localhost:3030/track/delete', {
-      idCode: id,
-      user: localStorage.getItem('user')
-    }).then((res)=>{
-      if(res) fetchData()
-    })
+    await axios.post('http://localhost:3030/track/delete', {idCode: id,user: localStorage.getItem('user')})
+    return fetchData()
   }
 
   const editingRowIndex = ref(-1)
@@ -30,17 +21,8 @@
 
   const errorsEditing = ref([])
   const saveEditedCode = async (id: string, value: object) => {
-    await axios.patch('http://localhost:3030/track/editar-codigo', {
-      idCode: id,
-      user: localStorage.getItem('user'),
-      values: value,
-    }).then((res)=>{
-      if(!res) fetchData()
-    })
-    .catch((e) => {
-      if(!e) return 
-      errorsEditing.value.push(e.response.data.message)
-    })
+    await axios.patch('http://localhost:3030/track/editar-codigo', {idCode: id,user: localStorage.getItem('user'),values: value,})
+    return fetchData()
   }
 </script>
 <template lang="pug">
@@ -67,25 +49,15 @@ v-container.notMobile(v-if="!mobile")
         :key="index"
       )
         v-btn(v-if="editingRowIndex !== index" icon="mdi-pencil" @click="editCode(index)" color="blue" variant="text")
-        v-btn(icon="mdi-delete" @click="dialog=true" color="red" variant="text")
-        v-dialog(
-          v-model="dialog"
-          width="400"
-        )
-          v-card
-            v-card-text.bg-blue-grey-lighten-1 Deseja excluir esse código de rastreio?
-            span.text-center.ma-2.text-warning Se excluido, o código não poderá ser recuperado!
-            v-card-actions
-              v-btn(color="primary" @click="dialog = false") Cancelar
-              v-btn(color="primary" @click="deleteCode(code._id)") Excluir
+        v-btn(icon="mdi-delete" @click="deleteCode(code._id)" color="red" variant="text")
         v-tooltip(text="Resultado do rastreio desse código")
-          template(v-slot:activator="{ props }")
+          template(v-slot:activator="{ props }") 
             v-btn(v-bind="props" color="orange" variant="text" icon="mdi-eye-settings")
         td
           v-chip(v-if="editingRowIndex !== index") {{ code.code }}
           v-text-field.ma-2(v-else style="width: 10rem" v-model="code.code")
         td 
-          span(v-if="editingRowIndex !== index") {{ code.description ? code.description : '.........' }}
+          span(v-if="editingRowIndex !== index") {{ code.description ? code.description : '---' }}
           v-textarea.ma-2(v-else v-model="code.description" rows="1")
         td 
           v-btn.ma-2(v-if="editingRowIndex == index" color="warning" icon="mdi-check-bold" size="small" @click="saveEditedCode(code._id,{ code: code.code, description:code.description})")

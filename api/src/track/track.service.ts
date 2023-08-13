@@ -48,6 +48,7 @@ export class TrackService {
   }
 
   async deleteCode(data) {
+    console.log('Id do código', data.idCode);
     const user = await this.userService.findByEmail(data.user);
     if (!user) throw new UnauthorizedException('Você não pode excluir');
     return await this.trackSchema.findByIdAndDelete(data.idCode);
