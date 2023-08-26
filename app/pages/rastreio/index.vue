@@ -31,7 +31,10 @@
     dialogCode.value = true
     isLoading.value = true
     await axios.post('http://localhost:3030/track',{orderCode: code}).then((res)=>{
-      if(res.data) isLoading.value = false
+      if(res.data) 
+        setTimeout(() => {
+          isLoading.value = false
+        }, 2500)
       result.value = res.data
     })
   }
@@ -61,26 +64,7 @@ v-container.notMobile(v-if="!mobile")
           indeterminate
           color="yellow-darken-2"
         )
-        template(v-for="item in result")
-          v-alert(
-            v-if="item.mensagem"
-            title="Erro Inesperado"
-            :text="item.mensagem"
-            type="error"
-          )
-            p Código: {{ item.codObjeto }}
-          v-timeline(align="start" style="margin-top:6rem")
-            v-timeline-item(
-              v-for="track in item.eventos"
-              dot-color="purple-lighten-3"
-              icon="mdi-truck-check"
-              fill-dot
-              max-width="300"
-            )
-              v-card
-                v-card-title(class="bg-green-lighten-1" class="text-wrap") {{ track.descricao }}
-                v-chip.ma-1(variant="outlined") Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
-                v-chip.ma-1(variant="outlined") Horário: {{ track.dtHrCriado.slice(11) }}
+        TrackTimeLine(v-if="!isLoading" :array="result")
       v-card-actions
         v-btn(color="primary" block @click="dialogCode = false") Fechar
   v-table.ma-2(theme="dark")
