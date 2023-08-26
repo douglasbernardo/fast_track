@@ -24,6 +24,17 @@
     await axios.patch('http://localhost:3030/track/editar-codigo', {idCode: id,user: localStorage.getItem('user'),values: value,})
     return fetchData()
   }
+  const dialogCode = ref(false)
+  const isLoading = ref(false)
+  const result = ref()
+  const openDialogCode = async (code: string) => {
+    dialogCode.value = true
+    isLoading.value = true
+    await axios.post('http://localhost:3030/track',{orderCode: code}).then((res)=>{
+      if(res.data) isLoading.value = false
+      result.value = res.data
+    })
+  }
 </script>
 <template lang="pug">
 v-container.notMobile(v-if="!mobile")
@@ -37,6 +48,41 @@ v-container.notMobile(v-if="!mobile")
     :text="error"
     type="error"
   )
+  v-dialog(
+    v-model="dialogCode"
+    width="auto"
+    parent="parent"
+  )
+    v-card
+      v-card-text
+        p(v-if="isLoading") Carregando Dados.....
+        v-progress-linear(
+          v-if="isLoading"
+          indeterminate
+          color="yellow-darken-2"
+        )
+        template(v-for="item in result")
+          v-alert(
+            v-if="item.mensagem"
+            title="Erro Inesperado"
+            :text="item.mensagem"
+            type="error"
+          )
+            p Código: {{ item.codObjeto }}
+          v-timeline(align="start" style="margin-top:6rem")
+            v-timeline-item(
+              v-for="track in item.eventos"
+              dot-color="purple-lighten-3"
+              icon="mdi-truck-check"
+              fill-dot
+              max-width="300"
+            )
+              v-card
+                v-card-title(class="bg-green-lighten-1" class="text-wrap") {{ track.descricao }}
+                v-chip.ma-1(variant="outlined") Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
+                v-chip.ma-1(variant="outlined") Horário: {{ track.dtHrCriado.slice(11) }}
+      v-card-actions
+        v-btn(color="primary" block @click="dialogCode = false") Fechar
   v-table.ma-2(theme="dark")
     thead
       tr
@@ -50,11 +96,8 @@ v-container.notMobile(v-if="!mobile")
       )
         v-btn(v-if="editingRowIndex !== index" icon="mdi-pencil" @click="editCode(index)" color="blue" variant="text")
         v-btn(icon="mdi-delete" @click="deleteCode(code._id)" color="red" variant="text")
-        v-tooltip(text="Resultado do rastreio desse código")
-          template(v-slot:activator="{ props }") 
-            v-btn(v-bind="props" color="orange" variant="text" icon="mdi-eye-settings")
         td
-          v-chip(v-if="editingRowIndex !== index") {{ code.code }}
+          v-chip(v-if="editingRowIndex !== index" @click="openDialogCode(code.code)") {{ code.code }}
           v-text-field.ma-2(v-else style="width: 10rem" v-model="code.code")
         td 
           span(v-if="editingRowIndex !== index") {{ code.description ? code.description : '---' }}
@@ -63,24 +106,24 @@ v-container.notMobile(v-if="!mobile")
           v-btn.ma-2(v-if="editingRowIndex == index" color="warning" icon="mdi-check-bold" size="small" @click="saveEditedCode(code._id,{ code: code.code, description:code.description})")
           v-btn.ma-2(v-if="editingRowIndex == index" icon="mdi-close" color="red" size="small" @click="editCode(-1)")
     p.text-center(v-else) Não Há códigos cadastrados no momento
-v-container.mobile(v-if="mobile")
-  .cards
-    .d-flex.align-center.flex-column
-      v-tooltip(text="Adicionar um novo código")
-        template(v-slot:activator="{ props }")
-          v-btn(v-bind="props" icon="mdi-plus-thick" @click="$router.push('/rastreio/adicionar-codigo')")
-      v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="code in trackCodes")
-        v-card-item
-          v-card-title Código: {{ code.code }}
-          v-card-subtitle {{ code.description }}
-        v-card-text
-          v-btn Resumo
-          v-menu
-            template(v-slot:activator='{ props }')
-              v-btn(v-bind='props' icon="mdi-dots-horizontal" variant="text")
-            v-list
-              v-list-item(@click="" prepend-icon="mdi-pencil") Editar
-              v-list-item(@click="" prepend-icon="mdi-delete") Excluir
+//- v-container.mobile(v-if="mobile")
+//-   .cards
+//-     .d-flex.align-center.flex-column
+//-       v-tooltip(text="Adicionar um novo código")
+//-         template(v-slot:activator="{ props }")
+//-           v-btn(v-bind="props" icon="mdi-plus-thick" @click="$router.push('/rastreio/adicionar-codigo')")
+//-       v-card.ma-2.pa-2(width='100%' variant="tonal" v-for="code in trackCodes")
+//-         v-card-item
+//-           v-card-title Código: {{ code.code }}
+//-           v-card-subtitle {{ code.description }}
+//-         v-card-text
+//-           v-btn Resumo
+//-           v-menu
+//-             template(v-slot:activator='{ props }')
+//-               v-btn(v-bind='props' icon="mdi-dots-horizontal" variant="text")
+//-             v-list
+//-               v-list-item(@click="" prepend-icon="mdi-pencil") Editar
+//-               v-list-item(@click="" prepend-icon="mdi-delete") Excluir
 </template>
 
 <style lang="sass">
