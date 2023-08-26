@@ -1,16 +1,16 @@
 <script lang="ts" setup>
   import { useStorage } from '@vueuse/core';
-import axios from 'axios'
-  const code = reactive({
-    value: ''
-  })
-  const user = localStorage.getItem('token')
-  const codeRules = [
-    value => {
-      if(value.length <= 13) return true
-      return 'O codigo deve conter apenas 13 caracteres'
-    }
-  ]
+  import axios from 'axios'
+    const code = reactive({
+      value: ''
+    })
+    const user = localStorage.getItem('token')
+    const codeRules = [
+      value => {
+        if(value.length <= 13) return true
+        return 'O codigo deve conter apenas 13 caracteres'
+      }
+    ]
   const trackResult = ref()
   const isLoading = ref(false)
   const trackOrder = async() => {
