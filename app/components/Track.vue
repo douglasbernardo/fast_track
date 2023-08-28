@@ -15,9 +15,6 @@
   const isLoading = ref(false)
   const trackOrder = async() => {
     useStorage('codeTrack',code.value)
-    setTimeout(()=>{
-      localStorage.removeItem('codeTrack')
-    },4000)
     isLoading.value = true
     await axios.post('http://localhost:3030/track',{orderCode: code.value})
     .then((res) => {
@@ -37,6 +34,7 @@
       if(!res) return
       codeSavedSnackBar.value = true
       console.log(res.data)
+      localStorage.removeItem('codeTrack')
     })
   }
 </script>
@@ -87,19 +85,8 @@ v-container
         color="amber"
       )
     template(v-if="trackResult")
-      template(v-for="item in trackResult")
-        v-timeline(align="start" style="margin-top:6rem")
-          v-timeline-item(
-            v-for="track in item.eventos"
-            dot-color="purple-lighten-3"
-            icon="mdi-truck-check"
-            fill-dot
-            max-width="300"
-          )
-            v-card
-              v-card-title(class="bg-green-lighten-1" class="text-wrap") {{ track.descricao }}
-              v-chip.ma-1(variant="outlined") Data: {{ track.dtHrCriado.slice(0,10).split('-').reverse().join('/') }}
-              v-chip.ma-1(variant="outlined") Horário: {{ track.dtHrCriado.slice(11) }}
+      div(style="margin-top: 4rem")
+        TrackTimeLine(:array="trackResult")
 </template>
 <style lang="sass" scoped>
 .v-container
