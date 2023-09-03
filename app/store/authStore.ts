@@ -27,13 +27,7 @@ export const useStore = defineStore('user', {
         email: email,
         password: pass
       }).then((res)=>{
-        if(res) navigateTo('/')
-        console.log(res)
-        this.user = res.data.payload.name
-        this.token = res.data.access_token
-        localStorage.setItem('user',res.data.payload.name)
-        localStorage.setItem('token',res.data.access_token)
-        navigateTo('/login')
+        if(res) navigateTo('/login')
       })
     },
     logout(){

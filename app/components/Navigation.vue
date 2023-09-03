@@ -11,7 +11,7 @@ v-card(style="z-index: 2")
     v-app-bar-nav-icon(variant="text" @click.stop="drawer = !drawer")
 
     v-toolbar-title Fast Track
-    h4(v-show="store?.token") Bem-Vindo {{ store.user }}
+    h4(v-show="store?.token") Bem-Vindo(a) {{ store.user }}
 
     v-spacer
 
