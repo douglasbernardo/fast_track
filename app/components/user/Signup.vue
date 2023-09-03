@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import axios from 'axios';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { useStore } from '../../store/authStore';
 const snackbar = ref(false)
 const {mobile} = useDisplay()
 const show1 = ref(false)
@@ -37,13 +37,8 @@ const passwordRules = [
     return 'Senha deve conter mais de 6 caracteres.'
   }
 ]
+const store = useStore()
 const signUp = async () => {
-  const objUser = {
-    name: user.name,
-    email: user.email,
-    password: user.password
-  }
-
   const regex= /.+@.+\..+/
   user.email && user.name && user.password ? passedWithNoErrors.value.push(true) : errors.value.push("Preencha os dados corretamente")
   user.name ? passedWithNoErrors.value.push(true) : errors.value.push("Nome está vazio")
@@ -52,9 +47,7 @@ const signUp = async () => {
   regex.test(user.email) ? passedWithNoErrors.value.push(true) : errors.value.push('E-mail é inválido') 
 
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
-    await axios.post('http://localhost:3030/user/cadastro',objUser).then((res)=>{
-      res.status !== 201 ? snackbar.value : snackbar.value = true 
-    })
+    store.signUp(user.name,user.email,user.password)
   }
 }
 </script>
