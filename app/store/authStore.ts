@@ -5,6 +5,7 @@ import { defineStore } from "pinia"
 export const useStore = defineStore('user', {
   state: () => ({
     user: localStorage.getItem('user'),
+    userName: localStorage.getItem('userName'),
     token: localStorage.getItem('token')
   }),
 
@@ -14,9 +15,11 @@ export const useStore = defineStore('user', {
         email: email,
         password: pass
       }).then((res)=>{
-        this.user = res.data.payload.name
+        this.user = res.data.payload.username
+        this.userName = res.data.payload.name
         this.token = res.data.access_token
         localStorage.setItem('user',res.data.payload.username)
+        localStorage.setItem('userName',res.data.payload.name)
         localStorage.setItem('token',res.data.access_token)
         navigateTo('/')
       })

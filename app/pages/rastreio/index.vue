@@ -1,17 +1,18 @@
 <script lang="ts" setup>
   import axios from 'axios';
   import { useDisplay } from 'vuetify/lib/framework.mjs';
+  import { codeStore } from '../../store/codeStore';
   const {mobile} = useDisplay()
-  const trackCodes = ref([])
-  const fetchData = async () => {
-    trackCodes.value = (await axios.post('http://localhost:3030/track/meus-codigos',{user: localStorage.getItem('user')})).data
+  const code = codeStore()
+  const fetchData = () => {
+    code.getMyCodes(localStorage.getItem('user'))
   }
-
+  
   onMounted(() => fetchData())
 
   const deleteCode = async (id: string) => {
     await axios.post('http://localhost:3030/track/delete', {idCode: id,user: localStorage.getItem('user')})
-    return fetchData()
+    fetchData()
   }
 
   const editingRowIndex = ref(-1)
@@ -22,7 +23,7 @@
   const errorsEditing = ref([])
   const saveEditedCode = async (id: string, value: object) => {
     await axios.patch('http://localhost:3030/track/editar-codigo', {idCode: id,user: localStorage.getItem('user'),values: value,})
-    return fetchData()
+    fetchData()
   }
   const dialogCode = ref(false)
   const isLoading = ref(false)
@@ -73,9 +74,9 @@ v-container.notMobile(v-if="!mobile")
         th(class="text-left") Ações
         th(class="text-left") Código de rastreio
         th(class="text-left") Descrição
-    tbody(v-if="trackCodes")
+    tbody(v-if="code.codes")
       tr(
-        v-for="(code, index) in trackCodes"
+        v-for="(code, index) in code.codes"
         :key="index"
       )
         v-btn(v-if="editingRowIndex !== index" icon="mdi-pencil" @click="editCode(index)" color="blue" variant="text")

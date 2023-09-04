@@ -11,7 +11,7 @@ v-card(style="z-index: 2")
     v-app-bar-nav-icon(variant="text" @click.stop="drawer = !drawer")
 
     v-toolbar-title Fast Track
-    h4(v-show="store?.token") Bem-Vindo(a) {{ store.user }}
+    h4(v-show="store?.token") Bem-Vindo(a) {{ store.userName }}
 
     v-spacer
 
@@ -21,7 +21,7 @@ v-card(style="z-index: 2")
     temporary
   )
     v-list
-      v-list-item(v-show="store.token" :title="store.user" prepend-icon="mdi-account")
+      v-list-item(v-show="store.token" :title="store.userName" prepend-icon="mdi-account")
       v-divider
       v-list-item(title="DashBoard" prepend-icon="mdi-view-dashboard" @click="$router.push('/')")
       v-list-item(v-show="store.token" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/rastreio')")
