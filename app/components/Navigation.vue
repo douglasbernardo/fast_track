@@ -1,23 +1,7 @@
 <script lang="ts" setup>
+  import { useStore } from '../store/authStore';
   const drawer = ref(false)
-  const isLoggedIn = ref(false)
-  const token = localStorage.getItem('token')
-  onMounted(()=>{
-    if(token){
-      isLoggedIn.value = true
-    }
-  })
-  watch(
-    () => isLoggedIn.value,
-    (newValue) => {
-      isLoggedIn.value = newValue
-    }
-  )
-  const logout = () => {
-    isLoggedIn.value = false
-    window.localStorage.clear()
-    navigateTo('/')  
-  }
+  const store = useStore()
 </script>
 <template lang="pug">
 v-card(style="z-index: 2")
@@ -27,7 +11,7 @@ v-card(style="z-index: 2")
     v-app-bar-nav-icon(variant="text" @click.stop="drawer = !drawer")
 
     v-toolbar-title Fast Track
-    p {{isLoggedIn}}
+    h4(v-show="store?.token") Bem-Vindo(a) {{ store.userName }}
 
     v-spacer
 
@@ -36,11 +20,13 @@ v-card(style="z-index: 2")
     location="left"
     temporary
   )
-    v-list 
+    v-list
+      v-list-item(v-show="store.token" :title="store.userName" prepend-icon="mdi-account")
+      v-divider
       v-list-item(title="DashBoard" prepend-icon="mdi-view-dashboard" @click="$router.push('/')")
-      v-list-item(v-show="isLoggedIn" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/rastreio')")
-      v-list-item(v-show="!isLoggedIn" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
-      v-list-item(v-show="isLoggedIn" title="Sair" prepend-icon="mdi-logout" @click="logout()")
+      v-list-item(v-show="store.token" title="Códigos de rastreio" prepend-icon="mdi-numeric" @click="$router.push('/rastreio')")
+      v-list-item(v-show="!store.token" title="Fazer login" prepend-icon="mdi-login" @click="$router.push('/login')")
+      v-list-item(v-show="store.token" title="Sair" prepend-icon="mdi-logout" @click="store.logout()")
 </template>
 
 <style lang="sass">

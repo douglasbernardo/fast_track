@@ -3,11 +3,11 @@ v-container
   userLogin 
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
   .v-container
     display: flex
     justify-content: center
     align-items: center
-    width: 100%
+    max-width: 70%
     height: 100vh
 </style>

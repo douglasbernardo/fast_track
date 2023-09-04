@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import axios from 'axios';
-import { useStorage } from '@vueuse/core'
+import { useStore } from '../../store/authStore';
+const store = useStore()
 const show1 = ref(false)
 const user = reactive({
   email: '',
@@ -9,10 +10,6 @@ const user = reactive({
 const errors = ref<Array<string>>([])
 const passedWithNoErrors = ref<Array<boolean>>([])
 const login = async () => {
-  const userLogin = {
-    email: user.email,
-    password: user.password
-  }
   const regex= /.+@.+\..+/
   user.email && user.password ? passedWithNoErrors.value.push(true) : errors.value.push("Preencha os dados corretamente")
   user.email ? passedWithNoErrors.value.push(true) : errors.value.push("E-mail está vazio")
@@ -20,22 +17,13 @@ const login = async () => {
   regex.test(user.email) ? passedWithNoErrors.value.push(true) : errors.value.push('E-mail é inválido') 
   errors.value = []
   if(passedWithNoErrors.value.every((itens)=>itens===true) && !errors.value.length) {
-    await axios.post('http://localhost:3030/auth/login',userLogin).then((response)=>{
-      if(response.data){
-        useStorage('token', JSON.stringify(response.data.access_token))
-        useStorage('user',response.data.payload.username)
-        navigateTo('/')
-      }
-    }).catch((error)=>{
-      if(error){
-        errors.value.push(error.response.data.message)
-      }
-    })
+    store.signIn(user.email,user.password)
   }
 }
 </script>
 <template lang="pug">
 v-container
+  //-v-list.flex-wrap {{ store }}
   v-card.pa-3(:width="inject('isMobile') ? '100%' : '50%'")
     h1.text-center Login
     v-alert.mb-2(

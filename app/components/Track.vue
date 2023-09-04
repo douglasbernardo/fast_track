@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useStorage } from '@vueuse/core';
-  import axios from 'axios'
+  import axios from 'axios';
     const code = reactive({
       value: ''
     })

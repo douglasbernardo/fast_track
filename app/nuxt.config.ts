@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     transpile: ['vuetify'],
   },
   modules: [
-    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt',
+    '@pinia/nuxt'
   ],
   pwa: {
     manifest: {
