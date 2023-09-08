@@ -2,7 +2,7 @@
 
 ###
 
-<p align="left">Projeto para fazer o rastreamento de encomendas dos correios</p>
+<p align="left">Sistema de rastramento de encomendas nos correios, Podendo também salvar seus códigos de rastreios para o rastreio do mesmo</p>
 
 ###
 
