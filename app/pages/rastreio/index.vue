@@ -5,7 +5,7 @@
   const {mobile} = useDisplay()
   const code = codeStore()
   const fetchData = () => {
-    code.getMyCodes(localStorage.getItem('user'))
+    code.getMyCodes(String(localStorage.getItem('user')))
   }
   
   onMounted(() => fetchData())
@@ -15,15 +15,22 @@
     fetchData()
   }
 
+  const isEditing = ref(false)
   const editingRowIndex = ref(-1)
   const editCode = async (index: number) => {
+    isEditing.value = !isEditing.value
     editingRowIndex.value = index
+    fetchData()
   }
 
   const errorsEditing = ref([])
   const saveEditedCode = async (id: string, value: object) => {
-    await axios.patch('http://localhost:3030/track/editar-codigo', {idCode: id,user: localStorage.getItem('user'),values: value,})
-    fetchData()
+    try {
+      await axios.patch('http://localhost:3030/track/editar-codigo', {idCode: id,user: localStorage.getItem('user'),values: value,})
+      fetchData()
+    } catch (error) {
+      console.log(error)
+    }
   }
   const dialogCode = ref(false)
   const isLoading = ref(false)
@@ -80,7 +87,7 @@ v-container.notMobile(v-if="!mobile")
         :key="index"
       )
         v-btn(v-if="editingRowIndex !== index" icon="mdi-pencil" @click="editCode(index)" color="blue" variant="text")
-        v-btn(icon="mdi-delete" @click="deleteCode(code._id)" color="red" variant="text")
+        v-btn(v-show="!isEditing" icon="mdi-delete" @click="deleteCode(code._id)" color="red" variant="text")
         td
           v-chip(v-if="editingRowIndex !== index" @click="openDialogCode(code.code)") {{ code.code }}
           v-text-field.ma-2(v-else style="width: 10rem" v-model="code.code")
