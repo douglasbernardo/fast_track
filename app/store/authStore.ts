@@ -34,8 +34,6 @@ export const useStore = defineStore('user', {
       })
     },
     logout(){
-      this.user = null
-      this.token = null
       localStorage.clear()
       navigateTo('/')
     }
